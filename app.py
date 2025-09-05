@@ -99,5 +99,24 @@ def submit():
     conn.close()
     return redirect('/')
 
+@app.route('/delete/<int:log_id>')
+def delete_log(log_id):
+    conn = sqlite3.connect('call_logs.db')
+    c = conn.cursor()
+    c.execute("DELETE FROM calls WHERE id = ?", (log_id,))
+    conn.commit()
+    conn.close()
+    return redirect('/')
+
+@app.route('/clear_all')
+def clear_all():
+    conn = sqlite3.connect('call_logs.db')
+    c = conn.cursor()
+    c.execute("DELETE FROM calls")
+    conn.commit()
+    conn.close()
+    return redirect('/')
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
