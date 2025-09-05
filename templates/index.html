@@ -18,10 +18,25 @@
         <button type="submit">Save Log</button>
     </form>
 
+    <h2>Search & Filter Logs</h2>
+    <form method="GET" action="/">
+        <input type="text" name="company_search" placeholder="Search by company name" value="{{ request.args.get('company_search', '') }}">
+        <input type="text" name="followup_search" placeholder="Search by follow-up" value="{{ request.args.get('followup_search', '') }}">
+        <select name="filter_type">
+            <option value="all" {% if request.args.get('filter_type') == 'all' %}selected{% endif %}>All Logs</option>
+            <option value="upcoming" {% if request.args.get('filter_type') == 'upcoming' %}selected{% endif %}>Upcoming Follow-ups Only</option>
+        </select>
+        <button type="submit">Search/Filter</button>
+        <a href="/">Clear</a>
+    </form>
+
     <h2>Previous Logs</h2>
+    <div style="margin-bottom: 10px;">
+        <button onclick="if(confirm('Are you sure you want to clear ALL logs? This cannot be undone!')) window.location.href='/clear_all'" style="background: #dc3545; color: white; padding: 8px 16px; border: none; cursor: pointer;">Clear All Logs</button>
+    </div>
     <table>
         <tr>
-            <th>ID</th><th>Company</th><th>Contact</th><th>Summary</th><th>Date</th><th>Follow-up</th>
+            <th>ID</th><th>Company</th><th>Contact</th><th>Summary</th><th>Date</th><th>Follow-up</th><th>Action</th>
         </tr>
         {% for log in logs %}
         <tr>
@@ -31,6 +46,7 @@
             <td>{{ log[3] }}</td>
             <td>{{ log[4] }}</td>
             <td>{{ log[5] }}</td>
+            <td><button onclick="if(confirm('Delete this log?')) window.location.href='/delete/{{ log[0] }}'" style="background: #dc3545; color: white; padding: 4px 8px; border: none; cursor: pointer; font-size: 12px;">Delete</button></td>
         </tr>
         {% endfor %}
     </table>
