@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Call Log Assistant</title>
+    <style>
+        body { font-family: Arial; margin: 40px; background: #f5f5f5; }
+        table { border-collapse: collapse; width: 100%; background: white; }
+        th, td { padding: 10px; border: 1px solid #ccc; }
+        th { background: #222; color: white; }
+        h2 { margin-bottom: 10px; }
+        form { margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+    <h2>Log a New Call (Smart Input)</h2>
+    <form method="POST" action="/submit">
+        <textarea name="summary" placeholder="e.g. Spoke to Sneha at Infosys, she said to follow up next Tuesday." rows="3" cols="50" required></textarea><br><br>
+        <button type="submit">Save Log</button>
+    </form>
+
+    <h2>Search & Filter Logs</h2>
+    <form method="GET" action="/">
+        <input type="text" name="company_search" placeholder="Search by company name" value="{{ request.args.get('company_search', '') }}">
+        <input type="text" name="followup_search" placeholder="Search by follow-up" value="{{ request.args.get('followup_search', '') }}">
+        <select name="filter_type">
+            <option value="all" {% if request.args.get('filter_type') == 'all' %}selected{% endif %}>All Logs</option>
+            <option value="upcoming" {% if request.args.get('filter_type') == 'upcoming' %}selected{% endif %}>Upcoming Follow-ups Only</option>
+        </select>
+        <button type="submit">Search/Filter</button>
+        <a href="/">Clear</a>
+    </form>
+
+    <h2>Previous Logs</h2>
+    <table>
+        <tr>
+            <th>ID</th><th>Company</th><th>Contact</th><th>Summary</th><th>Date</th><th>Follow-up</th>
+        </tr>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log[0] }}</td>
+            <td>{{ log[1] }}</td>
+            <td>{{ log[2] }}</td>
+            <td>{{ log[3] }}</td>
+            <td>{{ log[4] }}</td>
+            <td>{{ log[5] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
